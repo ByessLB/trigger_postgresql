@@ -1,0 +1,24 @@
+services:
+  postgres:
+    # Nom du conteneur qui sera créé
+    container_name: db-cogip
+    # Image de base utilisée
+    image: postgres:17.2
+    # Variables d'environnement qui seront utilisées pour configurer le conteneur
+    environment:
+      # Utilisateur
+      - POSTGRES_USER=${POSTGRES_USER}
+      # Mot de passe
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      # NOm d'une base de données créé au lancement du conteneur
+      - POSTGRES_DB=cogip
+    # Redirection de port
+    ports:
+      - "6667:5432"
+    # Le "docker-engine" tente systématiquement de redémarrer le conteneur
+    # de plus, le conteneur est démarrer automatiquement au lancement du "docker engine"
+    restart: always
+    # Création du volume permettant d'ajouter le script de création de la BDD au conteneur Docker
+    volumes:
+      - ./db/1_database_cogip.sql:/docker-entrypoint-initdb.d/1_database_cogip.sql
+      - ./db/2_database_insert_data.sql:/docker-entrypoint-initdb.d/2_database_insert_data.sql
